@@ -1,8 +1,8 @@
-import React from 'react'
-import './App.css'
-import { Route } from 'react-router-dom'
-import SearchBook from './SearchBook'
-import Library from './Library'
+import React from 'react';
+import './App.css';
+import { Route } from 'react-router-dom';
+import SearchBook from './SearchBook';
+import Library from './Library';
 
 class BooksApp extends React.Component {
 
@@ -17,7 +17,7 @@ class BooksApp extends React.Component {
         )}/>
       </div>
     )
-  }
-}
+  };
+};
 
-export default BooksApp
+export default BooksApp;

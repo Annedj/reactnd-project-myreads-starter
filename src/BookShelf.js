@@ -1,6 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Book from './Book'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Book from './Book';
 
 function BookShelf(props) {
   return (
@@ -8,16 +8,23 @@ function BookShelf(props) {
       <h2 className="bookshelf-title">{props.shelf}</h2>
       <div className="bookshelf-books">
         <ol className="books-grid">
-        {props.books.map((book) => (<Book key={book.id} book={book}/>))}
+        {props.books.map((book) => (
+          <Book
+            key={book.id}
+            book={book}
+            moveShelf={props.moveShelf}
+          />
+        ))}
         </ol>
       </div>
     </div>
   )
-}
+};
 
 BookShelf.proptypes = {
   books: PropTypes.array.isRequired,
-  shelf: PropTypes.string.isRequired
-}
+  shelf: PropTypes.string.isRequired,
+  moveShelf: PropTypes.func.isRequired
+};
 
-export default BookShelf
+export default BookShelf;

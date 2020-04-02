@@ -1,7 +1,9 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class MoveBookButton extends Component {
+  changeShelf = ()
+
   render() {
     return(
       <div className="book-shelf-changer">
@@ -14,11 +16,13 @@ class MoveBookButton extends Component {
         </select>
       </div>
     )
-  }
-}
+  };
+};
 
 MoveBookButton.proptypes = {
-  book: PropTypes.object.isRequired
-}
+  book: PropTypes.object.isRequired,
+  book: PropTypes.object.isRequired,
+  moveShelf: PropTypes.func.isRequired
+};
 
-export default MoveBookButton
+export default MoveBookButton;

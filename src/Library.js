@@ -1,28 +1,36 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import * as BooksAPI from './BooksAPI'
-import BookShelf from './BookShelf'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import * as BooksAPI from './BooksAPI';
+import BookShelf from './BookShelf';
+import { Link } from 'react-router-dom';
 
 const shelves = ['Currently Reading', 'Want to Read', 'Read'];
 
 class Library extends Component {
   state = {
     books: []
-  }
+  };
 
   componentDidMount () {
     BooksAPI.getAll()
       .then((books) => {
         this.setState({books})
         console.log("from app mount", books)
-      })
-  }
+      });
+  };
 
-  formatShelfName = (name) => name.toLowerCase().replace(/\s/g, '')
+  formatShelfName = (name) => name.toLowerCase().replace(/\s/g, '');
 
   filterBooks = (books, currentShelf) =>
-    books.filter((book) => this.formatShelfName(book.shelf) === this.formatShelfName(currentShelf))
+    books.filter((book) => this.formatShelfName(book.shelf) === this.formatShelfName(currentShelf));
+
+  moveShelf = (bookID, newShelf) => {
+    const bookToUpdate = this.state.books.find((book) => book.id === bookID);
+    bookToUpdate.shelf = newShelf;
+    this.setState((prevState) => ({
+      books: [...prevState.books, bookToUpdate]
+    }))
+  };
 
   render() {
     return (
@@ -31,7 +39,14 @@ class Library extends Component {
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          {shelves.map((shelf) => (<BookShelf shelf={shelf} key={this.formatShelfName(shelf)} books={this.filterBooks(this.state.books, shelf)} />))}
+          {shelves.map((shelf) => (
+            <BookShelf
+              shelf={shelf}
+              key={this.formatShelfName(shelf)}
+              books={this.filterBooks(this.state.books, shelf)}
+              moveShelf={this.moveShelf}
+            />
+          ))}
         </div>
 
         <Link
@@ -42,10 +57,10 @@ class Library extends Component {
       </div>
     )
   }
-}
+};
 
 Library.proptypes = {
   books: PropTypes.array.isRequired
-}
+};
 
-export default Library
+export default Library;
