@@ -1,33 +1,44 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
+import { Link } from 'react-router-dom'
 
 const shelves = ['Currently Reading', 'Want to Read', 'Read'];
 
 class Library extends Component {
-
-  filterBooks = (books, currentShelf) => {
-    const formatShelfName = (name) => name.toLowerCase().replace(/\s/g, '')
-    return books.filter((book) => formatShelfName(book.shelf) === formatShelfName(currentShelf))
-    //books.filter((book) => formatShelfName(book.shelf) === 'read')
+  state = {
+    books: []
   }
 
-  render() {
-    console.log(this.props.books)
-    // console.log(this.filterBooks(this.props.books, 'Currently Reading'))
+  componentDidMount () {
+    BooksAPI.getAll()
+      .then((books) => {
+        this.setState({books})
+        console.log("from app mount", books)
+      })
+  }
 
+  formatShelfName = (name) => name.toLowerCase().replace(/\s/g, '')
+
+  filterBooks = (books, currentShelf) =>
+    books.filter((book) => this.formatShelfName(book.shelf) === this.formatShelfName(currentShelf))
+
+  render() {
     return (
       <div className="list-books">
         <div className="list-books-title">
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          {shelves.map((shelf, index) => (<BookShelf shelf={shelf} key={index} books={this.filterBooks(this.props.books, shelf)} />))}
+          {shelves.map((shelf) => (<BookShelf shelf={shelf} key={this.formatShelfName(shelf)} books={this.filterBooks(this.state.books, shelf)} />))}
         </div>
 
-        <div className="open-search">
-          <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
-        </div>
+        <Link
+          to='/search'
+          className='open-search'
+          onClick={() => console.log('jai cliqué!')}
+        >Add a book</Link>
       </div>
     )
   }
