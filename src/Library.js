@@ -1,38 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as BooksAPI from './BooksAPI';
 import BookShelf from './BookShelf';
 import { Link } from 'react-router-dom';
 
 const shelves = ['Currently Reading', 'Want to Read', 'Read'];
 
 class Library extends Component {
-  state = {
-    books: []
-  };
-
-  componentDidMount () {
-    BooksAPI.getAll()
-      .then((books) => {
-        this.setState({books})
-        console.log("from app mount", books)
-      });
-  };
-
   formatShelfName = (name) => name.toLowerCase().replace(/\s/g, '');
 
   filterBooks = (books, currentShelf) =>
     books.filter((book) => this.formatShelfName(book.shelf) === this.formatShelfName(currentShelf));
 
-  moveShelf = (bookID, newShelf) => {
-    const bookToUpdate = this.state.books.find((book) => book.id === bookID);
-    bookToUpdate.shelf = newShelf;
-    this.setState((prevState) => ({
-      books: [...prevState.books, bookToUpdate]
-    }))
-  };
-
   render() {
+    const { books, moveShelf } = this.props
+
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -43,8 +24,8 @@ class Library extends Component {
             <BookShelf
               shelf={shelf}
               key={this.formatShelfName(shelf)}
-              books={this.filterBooks(this.state.books, shelf)}
-              moveShelf={this.moveShelf}
+              books={this.filterBooks(books, shelf)}
+              moveShelf={moveShelf}
             />
           ))}
         </div>
@@ -52,7 +33,6 @@ class Library extends Component {
         <Link
           to='/search'
           className='open-search'
-          onClick={() => console.log('jai cliqué!')}
         >Add a book</Link>
       </div>
     )
@@ -60,7 +40,8 @@ class Library extends Component {
 };
 
 Library.proptypes = {
-  books: PropTypes.array.isRequired
+  books: PropTypes.array.isRequired,
+  moveShelf: PropTypes.func.isRequired
 };
 
 export default Library;

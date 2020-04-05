@@ -2,12 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class MoveBookButton extends Component {
-  changeShelf = ()
+  state = {
+    value: this.props.currentShelf
+  }
+
+  change = (newShelf) => {
+  //  const newShelf = event.target.value;
+    this.setState({value: newShelf})
+    this.props.moveShelf(newShelf)
+  };
 
   render() {
     return(
       <div className="book-shelf-changer">
-        <select>
+        <select onChange={(e) => this.change(e.target.value)} value={this.state.value} >
           <option value="move" disabled>Move to...</option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="wantToRead">Want to Read</option>
@@ -21,7 +29,7 @@ class MoveBookButton extends Component {
 
 MoveBookButton.proptypes = {
   book: PropTypes.object.isRequired,
-  book: PropTypes.object.isRequired,
+  currentShelf: PropTypes.string,
   moveShelf: PropTypes.func.isRequired
 };
 
