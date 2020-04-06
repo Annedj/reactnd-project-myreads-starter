@@ -8,11 +8,9 @@ class SearchBook extends Component {
   state = {
     query: '',
     searchBooks: []
-  }
+  };
 
   updateQuery = (query) => {
-    console.log('before call api ', query)
-
     this.setState({query})
 
     if (!query) { this.setState({
@@ -21,16 +19,29 @@ class SearchBook extends Component {
     } else {
       this.searchForBooks(query)
     }
-
-  }
+  };
 
   searchForBooks = (query) => {
     BooksAPI.search(query)
       .then((searchBooks) => {
+        const updatedListBooks = this.updateWithExistingBooks(searchBooks)
         this.setState({
-          searchBooks
+          searchBooks: updatedListBooks
         })
     })
+  };
+
+  updateWithExistingBooks = (searchBooks) => {
+    let mergedArray = []
+    searchBooks.forEach((searchBook) => {
+      let bookToFind = this.props.books.find((existingBook) => existingBook.id === searchBook.id)
+      if (bookToFind) {
+        mergedArray.push(bookToFind)
+      } else {
+        mergedArray.push(searchBook)
+      }
+    })
+    return mergedArray
   }
 
   render() {
@@ -67,6 +78,7 @@ class SearchBook extends Component {
 }
 
 SearchBook.proptypes = {
+  books: PropTypes.array.isRequired,
   moveShelf: PropTypes.func.isRequired
 }
 
